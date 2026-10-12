@@ -81,7 +81,8 @@ def transform(tree, final_output):
     var librarySyncStatus = "Sync off"
     var libraryFolder: URL?
     @ObservationIgnored var librarySyncState = DesktopSyncState()
-    @ObservationIgnored let libraryExchange = DesktopLibraryExchange()''')
+    @ObservationIgnored let libraryExchange = DesktopLibraryExchange()
+    @ObservationIgnored var libraryPoll: Task<Void, Never>?''')
     replace_once(app, '        self.startsServices = startsServices\n', '''        self.startsServices = startsServices
         let recoveryFailure: String?
         do { try DesktopLibraryStore(directory: store.directory).recover(); recoveryFailure = nil }
@@ -90,6 +91,7 @@ def transform(tree, final_output):
     replace_once(app, '        guard startsServices else { return }\n', '''        if let recoveryFailure { storageIsReadable = false; statusMessage = recoveryFailure }
         guard startsServices else { return }
         restoreLibraryConnection()
+        startLibraryPolling()
 ''')
     settings = tree / 'Sources/BetterWispr/Features/Settings/SettingsView.swift'
     replace_once(settings, '                SettingsSection("Permissions") {', '                LibrarySyncSection(model: model)\n\n                SettingsSection("Permissions") {')

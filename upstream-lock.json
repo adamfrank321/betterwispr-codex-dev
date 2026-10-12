@@ -65,8 +65,8 @@
     {
       "path": "Transcription/CorrectionLearner.swift",
       "sha256": "eed6bfd478b0edda098535a5d246992081aef0f001c8ee5a6d0735984733660a",
-      "shared_sha256": "eed6bfd478b0edda098535a5d246992081aef0f001c8ee5a6d0735984733660a",
-      "adaptation": "unchanged"
+      "shared_sha256": "93efd8611ce138dda4d2cc3b55e5c400ae036efed7155765140bf47bcf5904ed",
+      "adaptation": "expose tokenize for desktop TranscriptPolisher across package boundary; algorithm unchanged"
     },
     {
       "path": "Transcription/EmailDictation.swift",

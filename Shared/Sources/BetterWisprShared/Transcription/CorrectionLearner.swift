@@ -39,7 +39,8 @@ public enum CorrectionLearner {
         commonWords.contains(phrase.lowercased())
     }
 
-    static func tokenize(_ text: String) -> [String] {
+    // Shared with desktop TranscriptPolisher after extraction into this package.
+    public static func tokenize(_ text: String) -> [String] {
         let edges = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_")).inverted
         return text.split(whereSeparator: \.isWhitespace)
             .map { $0.trimmingCharacters(in: edges) }

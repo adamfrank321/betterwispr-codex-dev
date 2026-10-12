@@ -89,4 +89,27 @@ struct LibraryTests {
         #expect(merged.history.map(\.id) == [added.id])
         #expect(merged.vocabulary == local.vocabulary)
     }
+    @Test func cloudPlaceholderPausesInsteadOfDroppingRecords() throws {
+        try withJournal { journal in
+            var local = LibrarySnapshot(); local.history = [transcript()]
+            let baseline = try journal.exchange(local: local, baseline: nil)
+            let placeholder = journal.directory.appendingPathComponent(".pending.json.icloud")
+            try Data().write(to: placeholder)
+            #expect(throws: (any Error).self) { try journal.exchange(local: baseline, baseline: baseline) }
+            #expect(FileManager.default.fileExists(atPath: placeholder.path))
+        }
+    }
+
+    @Test func missingPreviouslySeenEventPausesInsteadOfImplyingDeletion() throws {
+        try withJournal { journal in
+            var local = LibrarySnapshot(); local.history = [transcript()]
+            let baseline = try journal.exchange(local: local, baseline: nil)
+            let events = try journal.events()
+            let event = try #require(events.first { $0.key.hasPrefix("transcript/") })
+            let file = journal.directory.appendingPathComponent("\(event.device.uuidString)-\(event.id.uuidString).json")
+            try FileManager.default.removeItem(at: file)
+            #expect(throws: (any Error).self) { try journal.exchange(local: baseline, baseline: baseline) }
+            #expect(baseline.history.count == 1)
+        }
+    }
 }

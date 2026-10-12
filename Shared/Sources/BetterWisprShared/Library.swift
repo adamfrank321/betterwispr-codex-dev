@@ -108,8 +108,16 @@ public struct LibraryJournal: Sendable {
 
     public func events() throws -> [LibraryEvent] {
         guard FileManager.default.fileExists(atPath: directory.path) else { return [] }
-        let urls = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+        let keys: Set<URLResourceKey> = [.isUbiquitousItemKey, .ubiquitousItemDownloadingStatusKey]
+        let urls = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: Array(keys))
+        if let placeholder = urls.first(where: { $0.pathExtension == "icloud" }) {
+            throw LibraryError.unreadableFile(placeholder.lastPathComponent)
+        }
         return try urls.filter { $0.pathExtension == "json" }.map { url in
+            let status = try url.resourceValues(forKeys: keys)
+            if status.isUbiquitousItem == true, status.ubiquitousItemDownloadingStatus != .current {
+                throw LibraryError.unreadableFile(url.lastPathComponent)
+            }
             let event: LibraryEvent
             do { event = try JSONDecoder().decode(LibraryEvent.self, from: coordinatedRead(url)) }
             catch { throw LibraryError.unreadableFile(url.lastPathComponent) }
@@ -135,6 +143,10 @@ public struct LibraryJournal: Sendable {
         var counter = existing.map(\.counter).max() ?? 0
         let before = baseline?.values ?? [:], after = local.values
         let remoteKeys = Set(existing.map(\.key))
+        // Missing files are not deletion events. A partially delivered directory must not erase local records.
+        if baseline != nil, !Set(before.keys).isSubset(of: remoteKeys) {
+            throw LibraryError.unreadableFile("previously synchronized library records")
+        }
         let keys = Set(before.keys).union(after.keys).sorted()
         for key in keys {
             if baseline == nil, remoteKeys.contains(key) { continue }

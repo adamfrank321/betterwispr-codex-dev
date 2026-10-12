@@ -5,6 +5,16 @@ import BetterWisprShared
 extension AppModel {
     var desktopLibraryStore: DesktopLibraryStore { DesktopLibraryStore(directory: store.directory) }
 
+    func startLibraryPolling() {
+        libraryPoll = Task { @MainActor [weak self] in
+            while !Task.isCancelled {
+                do { try await Task.sleep(for: .seconds(30)) } catch { return }
+                guard let self else { return }
+                await self.synchronizeLibrary()
+            }
+        }
+    }
+
     func restoreLibraryConnection() {
         do {
             librarySyncState = try desktopLibraryStore.loadSync()

@@ -1,19 +1,31 @@
-# Desktop integration handoff
+# Desktop integration
 
-Inspected at upstream c10b57fd9525216045ab7e9e35d851bacca5cfe7. No desktop adapter has been applied yet.
+The desktop adapter is generated against upstream `c10b57fd9525216045ab7e9e35d851bacca5cfe7`. It shares the actual Swift package with iOS. No duplicate model or cleanup definitions remain in the generated desktop target.
 
-The current desktop has two persistence owners:
+## Build on Mac
 
-- `Sources/BetterWisprCore/Persistence/LocalStore.swift` reads and writes `workspace.json`, a versioned `SavedState` containing AppSettings, history and vocabulary. `Sources/BetterWispr/App/AppModel.swift` loads it in init and writes through a private `persist()` method. It refuses to overwrite unreadable workspaces.
-- `Sources/BetterWisprCore/Persistence/MeetingStore.swift` stores each meeting in its own versioned JSON wrapper. `Sources/BetterWispr/App/MeetingModel.swift` owns meeting changes and scheduled saves. Load returns unreadable file paths, which must block destructive synchronization rather than be interpreted as missing meetings.
+From this repository:
 
-Proposed next implementation:
+```sh
+python3 scripts/prepare_desktop.py
+swift build --package-path Desktop/Upstream
+swift test --package-path Desktop/Upstream
+cd Desktop/Upstream
+./scripts/build-app.sh
+```
 
-1. Generate a separate desktop checkout pinned to the lock file. Verify original file hashes before applying any patch and fail on revision mismatch.
-2. Add a local dependency on BetterWisprShared. Remove the twelve extracted source definitions from BetterWisprCore, retaining the desktop-only AppSettings extension from WritingMode. Import/re-export the shared declarations where needed and run upstream tests to catch visibility assumptions.
-3. Persist the journal baseline in the same local transaction as merged workspace state. Meetings need a pending transaction/recovery record because their files and workspace are separate writes. Retrying after a crash must not republish stale records or lose a deletion.
-4. Route exchanges through AppModel and MeetingModel on their existing serialized execution path. Wait for scheduled meeting saves, require idle recording state, and preserve device-only AppSettings fields.
-5. Offer explicit folder selection, sync status, disconnect and manual refresh. Use the same `BetterWisprLibrary/events` directory as iOS. Never directly edit workspace.json from another process while BetterWispr is running.
-6. Add integration tests for existing IDs, first connection, offline changes, remote deletions, unreadable meetings and failed local commits after remote publication.
+The setup command clones upstream at the pinned commit. Alternatively pass `--source /path/to/pinned/upstream` to use an existing checkout. The generator refuses an existing output directory; choose a fresh `--output` for another build. Changes belong in `Desktop/Overlay` or the generator, not in the disposable generated checkout.
 
-Do not call desktop synchronization complete until the actual app reads an iOS event and iOS reads a desktop event without losing local preferences or meeting files.
+Run the generated desktop app and open Settings → Library sync → Connect. Choose the same parent folder selected in the iOS app. The journal resides at `BetterWisprLibrary/events` beneath it. This requires the patched desktop build; the stock upstream release has no sync controls.
+
+After connection, desktop sync runs every 30 seconds while the app is running and neither dictation nor meeting processing is busy. Sync now triggers it immediately. iOS sync runs on foreground entry, after library edits or on request. File provider delivery may take longer; these timers do not guarantee an iCloud propagation deadline.
+
+## Persistence and recovery
+
+Desktop `LocalStore` continues to own workspace.json. `MeetingStore` continues to own individual meeting files. `DesktopLibraryStore` writes a private, local `library-sync-pending.json` before committing changes across them and `library-sync.json`, which stores the baseline and folder bookmark.
+
+On startup, the adapter replays pending work before either model loads. Normal stores refuse writes until recovery finishes. Replay is repeatable. It validates existing workspace, meeting and metadata files before overwriting them. Malformed or newer-version files stop recovery and remain intact. The pending file is removed only after all destinations and the baseline have been saved.
+
+Local changes made during remote I/O are applied over the merged result and remain pending for the next exchange. API connection settings, selected engines, shortcuts, microphones and other device settings never enter the journal. Synced transcript text is plaintext in the selected folder.
+
+`docs/desktop-design.md` explains ownership. `Desktop/Overlay/Tests/DesktopLibraryTests.swift` exercises the actual desktop AppModel against the same LibraryJournal used by iOS, including deletion propagation and reloading desktop storage. Physical iCloud/bookmark behavior still requires Mac/iPhone acceptance testing.
