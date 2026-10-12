@@ -1,0 +1,78 @@
+{
+  "repository": "https://github.com/opennookorg/betterwispr.git",
+  "commit": "c10b57fd9525216045ab7e9e35d851bacca5cfe7",
+  "files": [
+    {
+      "path": "Domain/Transcript.swift",
+      "sha256": "0c65af793ac265adb40d3b9d3d23237deb33479b33082185721c85ffe631fb72",
+      "shared_sha256": "0c65af793ac265adb40d3b9d3d23237deb33479b33082185721c85ffe631fb72",
+      "adaptation": "unchanged"
+    },
+    {
+      "path": "Domain/WritingStyle.swift",
+      "sha256": "10e5b6900d71fab9b0a5c8a08710a2596bd424cbff48f80f436b47bb6e238bfa",
+      "shared_sha256": "10e5b6900d71fab9b0a5c8a08710a2596bd424cbff48f80f436b47bb6e238bfa",
+      "adaptation": "unchanged"
+    },
+    {
+      "path": "Domain/WritingMode.swift",
+      "sha256": "3857d8207db22640c863a5b97256f892ccc6dbba610db4e2b511a0b79ae32812",
+      "shared_sha256": "a3c8055d27af905552519771683c7d6884896d54d62668ffec289cf70fb6b838",
+      "adaptation": "remove desktop AppSettings extension"
+    },
+    {
+      "path": "Domain/Meeting.swift",
+      "sha256": "006b9c151c83a5f23f0190b4aae94fad3591645d07982b970df452bf7a2a3d80",
+      "shared_sha256": "006b9c151c83a5f23f0190b4aae94fad3591645d07982b970df452bf7a2a3d80",
+      "adaptation": "unchanged"
+    },
+    {
+      "path": "Domain/UsageInsights.swift",
+      "sha256": "ce15190966957d962bfb98f7dea111f27e6f782c7784b162e1263f4bd9b0bf3a",
+      "shared_sha256": "ce15190966957d962bfb98f7dea111f27e6f782c7784b162e1263f4bd9b0bf3a",
+      "adaptation": "unchanged"
+    },
+    {
+      "path": "Transcription/TranscriptCleaner.swift",
+      "sha256": "f72716f557b7e034fcabe1e0d739959cf062991fc292a1e3ffe76aed5dc2a9c9",
+      "shared_sha256": "f72716f557b7e034fcabe1e0d739959cf062991fc292a1e3ffe76aed5dc2a9c9",
+      "adaptation": "unchanged"
+    },
+    {
+      "path": "Transcription/VoiceCommands.swift",
+      "sha256": "300f7f30f795d69a5bef040e61215635edbf07818e5b0850f777382962f04f48",
+      "shared_sha256": "300f7f30f795d69a5bef040e61215635edbf07818e5b0850f777382962f04f48",
+      "adaptation": "unchanged"
+    },
+    {
+      "path": "Transcription/SpokenNumbers.swift",
+      "sha256": "7bc38fad989fb8bb4cb4339d9a966efa7f0f3681ba183c4df15cf06f85250fa5",
+      "shared_sha256": "7bc38fad989fb8bb4cb4339d9a966efa7f0f3681ba183c4df15cf06f85250fa5",
+      "adaptation": "unchanged"
+    },
+    {
+      "path": "Transcription/VocabularyProcessor.swift",
+      "sha256": "3082f490e2b64c55790ccdfd90b4e5f2278d8dab57e87e5d21a906e489ee55a0",
+      "shared_sha256": "3082f490e2b64c55790ccdfd90b4e5f2278d8dab57e87e5d21a906e489ee55a0",
+      "adaptation": "unchanged"
+    },
+    {
+      "path": "Transcription/StyleFormatter.swift",
+      "sha256": "b595271663a3b22397d5617214223dbd3ce2e63df5f4bec128a36443f5879a2d",
+      "shared_sha256": "b595271663a3b22397d5617214223dbd3ce2e63df5f4bec128a36443f5879a2d",
+      "adaptation": "unchanged"
+    },
+    {
+      "path": "Transcription/CorrectionLearner.swift",
+      "sha256": "eed6bfd478b0edda098535a5d246992081aef0f001c8ee5a6d0735984733660a",
+      "shared_sha256": "eed6bfd478b0edda098535a5d246992081aef0f001c8ee5a6d0735984733660a",
+      "adaptation": "unchanged"
+    },
+    {
+      "path": "Transcription/EmailDictation.swift",
+      "sha256": "c8276fdbf49ee5d1f954e908c3937afc00d11d2dcd5a6d396c92e490e7b733d9",
+      "shared_sha256": "c8276fdbf49ee5d1f954e908c3937afc00d11d2dcd5a6d396c92e490e7b733d9",
+      "adaptation": "unchanged"
+    }
+  ]
+}

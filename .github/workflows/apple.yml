@@ -1,0 +1,27 @@
+name: Apple build and shared tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  apple:
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: xcodebuild -version && swift --version
+      - name: Source integrity
+        run: python3 scripts/check_source.py
+      - name: Validator tests
+        run: python3 -m unittest discover -s scripts/tests -v
+      - name: Shared library regression tests
+        run: swift test --package-path Shared
+      - name: Install project generator
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Build app and keyboard for simulator
+        run: xcodebuild -project BetterWispr.xcodeproj -scheme BetterWispr -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
