@@ -16,6 +16,12 @@ Updated 2026-10-12. See docs/verification.md for build evidence.
 - [x] Pass source checks, three Python tests, ten shared Swift tests and iOS simulator compilation.
 - [x] Pass latest desktop build and all 172 upstream/desktop tests in workflow 38298119747.
 
+## Sideloading build
+
+- [x] Add reproducible unsigned device IPA workflow, package checks and signing instructions.
+- [ ] Pass device IPA CI build and inspect downloadable artifact.
+- [ ] Verify Signulous provisioning of shared App Group and keyboard, then device installation.
+
 ## Device and release gates
 
 - [ ] Signed iPhone and Mac acceptance: sync, microphone interruptions, bookmarks, keyboard and API.

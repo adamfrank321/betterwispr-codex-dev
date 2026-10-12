@@ -1,0 +1,37 @@
+name: Device IPA for external signing
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/device-ipa.yml'
+      - 'scripts/build_device_ipa.py'
+      - 'project.yml'
+      - 'iOS/**'
+      - 'Shared/**'
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: macos-26
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source integrity and portable tests
+        run: |
+          python3 scripts/check_source.py
+          python3 -m unittest discover -s scripts/tests -v
+      - name: Shared regression tests
+        run: swift test --package-path Shared
+      - name: Install project generator
+        run: brew install xcodegen
+      - name: Build and inspect unsigned device IPA
+        run: python3 scripts/build_device_ipa.py
+      - name: Include installation instructions
+        run: cp docs/sideloading.md dist/INSTALL.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BetterWispr-device-unsigned
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30

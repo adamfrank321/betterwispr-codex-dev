@@ -17,6 +17,10 @@ Source commit `8d91ded82bca18566595a456b3706c3412365a12`, tested through documen
 - Desktop commits workspace, meetings and sync baseline through a replayable pending transaction. Startup recovery precedes model loading; ordinary writes are blocked while recovery is pending. Corrupt files are preserved.
 - New editors retain unedited desktop fields and show archive-save failures. Desktop folder selection handles ordinary and security-scoped URLs.
 
+## Sideloading work, 2026-10-12
+
+User authorized preparing an IPA for Signulous. Added scripts/build_device_ipa.py and a dedicated device-ipa workflow. It builds Release iphoneos without signing, checks arm64/iOS Mach-O binaries and both bundles, then uploads the IPA with checksums and entitlement requirements. CI and device installation are pending. See docs/sideloading.md. Do not claim Signulous App Group compatibility; it has not been confirmed. No support message sent or account purchase made.
+
 ## Verification and next work
 
 Workflow [38298119747](https://github.com/adamfrank321/betterwispr-codex-dev/actions/runs/38298119747) passed both jobs at commit `6a10f56`: full desktop compilation, all 172 upstream/desktop tests (including five desktop integration tests), all 10 shared Swift tests, iOS app/keyboard simulator compilation, source provenance and three portable Python tests. The subsequent handoff update changes documentation only.

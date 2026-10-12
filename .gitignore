@@ -16,3 +16,5 @@ iOS/App/Info.plist
 iOS/Keyboard/Info.plist
 iOS/App/BetterWispr.entitlements
 iOS/Keyboard/BetterWispr.entitlements
+
+dist/
