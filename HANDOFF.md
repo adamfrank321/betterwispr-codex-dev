@@ -19,7 +19,7 @@ Source commit `8d91ded82bca18566595a456b3706c3412365a12`, tested through documen
 
 ## Sideloading work, 2026-10-12
 
-User authorized preparing an IPA for Signulous. Added scripts/build_device_ipa.py and a dedicated device-ipa workflow. It builds Release iphoneos without signing, checks arm64/iOS Mach-O binaries and both bundles, then uploads the IPA with checksums and entitlement requirements. CI and device installation are pending. See docs/sideloading.md. Do not claim Signulous App Group compatibility; it has not been confirmed. No support message sent or account purchase made.
+User authorized preparing an IPA for Signulous. Added scripts/build_device_ipa.py and a dedicated device-ipa workflow. It builds Release iphoneos without signing, checks arm64/iOS Mach-O binaries and both bundles, then uploads the IPA with checksums and entitlement requirements. Device workflow 38315781228 passed at commit cfb8a3bf1f6015443659f2aa3b01b6c96d49790b: 10 Swift tests, 3 Python tests, Release iphoneos build, Mach-O arm64/iOS and ZIP checks. Artifact 11776885191 contains BetterWispr-unsigned.ipa and signing requirements, expires 2026-11-11. IPA SHA-256: 76df9f4b670118be763c0a1ce42b34743b398f40acb289a38aa03d6b2460a90e. Simulator job also passed in run 38315781167; desktop job was still running when this note was written. Device installation remains pending. See docs/sideloading.md. Do not claim Signulous App Group compatibility; it has not been confirmed. No support message sent or account purchase made.
 
 ## Verification and next work
 

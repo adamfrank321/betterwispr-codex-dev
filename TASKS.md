@@ -19,7 +19,7 @@ Updated 2026-10-12. See docs/verification.md for build evidence.
 ## Sideloading build
 
 - [x] Add reproducible unsigned device IPA workflow, package checks and signing instructions.
-- [ ] Pass device IPA CI build and inspect downloadable artifact.
+- [x] Pass device IPA CI build and package checks; artifact 11776885191 in run 38315781228.
 - [ ] Verify Signulous provisioning of shared App Group and keyboard, then device installation.
 
 ## Device and release gates
