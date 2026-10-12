@@ -13,7 +13,7 @@ Updated 2026-10-12. Source completion and runtime verification are separate.
 - [x] Add XcodeGen app/keyboard targets and Apple CI configuration.
 - [x] Add Swift regression tests for journal and pipeline behavior.
 - [x] Run source integrity check and two portable validator tests successfully.
-- [ ] Verify Swift regression tests and simulator app/keyboard compilation on macOS CI.
+- [x] Verify seven Swift regression tests and simulator app/keyboard compilation on macOS CI, run 38295003866.
 - [ ] Integrate the same shared package and journal with pinned upstream desktop persistence.
 - [ ] Test two-device sync, microphone interruption, bookmarks, keyboard and API on physical devices.
 - [ ] Finish robust recovery for failed recordings and sync conflicts.

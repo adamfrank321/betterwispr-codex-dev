@@ -63,7 +63,7 @@ final class DictationRecorder {
         let duration = recorder.currentTime
         recorder.stop(); self.recorder = nil; recordingURL = nil
         ticker?.cancel(); ticker = nil; level = 0
-        try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         return (url, duration)
     }
 

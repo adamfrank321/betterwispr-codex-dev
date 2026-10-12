@@ -18,18 +18,18 @@ Added SwiftUI entry point and screens, keyboard insertion, XcodeGen target/entit
 
 ## Verification
 
-Linux has no Swift compiler or Xcode. Source integrity check and two Python tests passed on October 12. Swift tests and the simulator build are pending macOS CI. None of the microphone, recognition, iCloud folder or keyboard behavior has been device-tested. Do not equate source implementation with a working signed app.
+Linux has no Swift compiler or Xcode. Source integrity check and two Python tests passed on October 12. At commit `1ce2d869dd61cfb73de08ebefc68f6ce74d9a25a`, all seven Swift tests, XcodeGen generation and the simulator app/keyboard build passed in GitHub Actions run https://github.com/adamfrank321/betterwispr-codex-dev/actions/runs/38295003866 . The follow-up makes audio-session deactivation best-effort after recording has safely stopped, so a deactivation error cannot strand its temporary file; its new CI run should also be checked. None of the microphone, recognition, iCloud folder or keyboard behavior has been device-tested. Do not equate source implementation with a working signed app.
 
 ## Resume, in order
 
-1. Inspect GitHub Actions for the latest main commit. Fix compile/test failures and record exact results here.
-2. Finish desktop integration using the pinned upstream workspace persistence, not competing JSON file watchers. See docs/architecture.md.
+1. Inspect GitHub Actions for the latest main commit. The first full Apple build is green; keep that gate green as development continues.
+2. Finish desktop integration using the pinned upstream workspace persistence, not competing JSON file watchers. See docs/architecture.md and docs/desktop-integration.md for the inspected persistence entry points.
 3. Run the physical-device acceptance checklist in docs/testing.md. Improve capture interruption/failure recovery before long recordings.
 4. Complete editing controls for existing modes, vocabulary and meeting notes. Add conflict recovery before journal compaction.
 
 ## Preserved decisions
 
-- Native SwiftUI app, Foundation shared package; upstream MIT license retained.
+- Native SwiftUI app, Foundation shared package; upstream Apache-2.0 license retained.
 - Default speech recognition is explicitly on-device. Cloud upload requires selecting Custom API.
 - Sync history, vocabulary, modes, meetings and writing preferences through immutable event files. Never sync credentials, recordings or model assets.
 - Preserve raw transcripts and unreadable files. Retain tombstones and concurrent event versions.

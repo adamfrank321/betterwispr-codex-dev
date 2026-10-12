@@ -33,4 +33,4 @@ For a device build, choose your development team and register the app/keyboard b
 
 Read [TASKS.md](TASKS.md), [HANDOFF.md](HANDOFF.md) and [docs/testing.md](docs/testing.md). Run `python3 scripts/check_source.py` and `python3 -m unittest discover -s scripts/tests -v` on any host. The Apple workflow runs actual Swift tests and builds the app plus keyboard.
 
-Upstream source is pinned in `upstream-lock.json`. Copied files retain the upstream MIT license in `LICENSE`; eleven files are unchanged and WritingMode removes the desktop settings extension. The source validator detects drift from this extracted baseline.
+Upstream source is pinned in `upstream-lock.json`. Copied files retain the upstream Apache-2.0 license in `LICENSE`; eleven files are unchanged and WritingMode removes the desktop settings extension. The source validator detects drift from this extracted baseline.
