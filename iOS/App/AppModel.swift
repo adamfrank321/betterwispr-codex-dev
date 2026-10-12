@@ -126,12 +126,7 @@ final class AppModel {
             do {
                 let merged = try await store.exchange(local, baseline: baseline, folder: folder, device: device)
                 // UI edits made during I/O are carried forward against the returned baseline.
-                var values = merged.values
-                if revision != mutation {
-                    let before = local.values, after = library.values
-                    for key in Set(before.keys).union(after.keys) where before[key] != after[key] { values[key] = after[key] }
-                }
-                library = LibrarySnapshot(values: values)
+                library = LibrarySnapshot.rebasingChanges(from: local, to: library, onto: merged)
                 archive.baseline = merged
                 await persist()
                 syncStatus = revision == mutation - 1 ? "Updated just now" : "Changes pending"

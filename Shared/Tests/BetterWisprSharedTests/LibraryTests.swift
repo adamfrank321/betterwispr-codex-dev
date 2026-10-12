@@ -80,4 +80,13 @@ struct LibraryTests {
         #expect(output.text.contains("Snowflake"))
         #expect(raw == "I use snow flake.")
     }
+    @Test func editsDuringSyncPreserveLocalChangesAndRemoteAdditions() {
+        var before = LibrarySnapshot(); before.history = [transcript()]
+        var local = before; local.history = []
+        local.vocabulary = [VocabularyEntry(phrase: "my word", replacement: "MyWord")]
+        var remote = before; let added = transcript("Remote addition"); remote.history.append(added)
+        let merged = LibrarySnapshot.rebasingChanges(from: before, to: local, onto: remote)
+        #expect(merged.history.map(\.id) == [added.id])
+        #expect(merged.vocabulary == local.vocabulary)
+    }
 }

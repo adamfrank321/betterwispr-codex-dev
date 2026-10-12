@@ -26,3 +26,10 @@ Release follow-up
 - [ ] Longer meeting capture with supported on-device engines.
 - [ ] Medium cleanup and meeting summaries with a selected notes model.
 - [ ] Export/recover concurrent journal versions and safe journal compaction.
+
+Desktop continuation
+
+- [x] Add pinned, reproducible desktop integration generator and shared-package extraction.
+- [x] Implement desktop folder controls, journal exchange and recoverable multi-file commit.
+- [x] Add desktop round-trip/recovery tests and Apple CI job.
+- [ ] Compile desktop app and pass full upstream plus desktop sync tests on Apple CI.

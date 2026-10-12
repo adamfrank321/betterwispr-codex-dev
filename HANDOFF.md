@@ -42,3 +42,7 @@ Linux has no Swift compiler or Xcode. Source integrity check and two Python test
 - https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html
 - https://developer.apple.com/documentation/uikit/configuring-open-access-for-a-custom-keyboard
 - https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md
+
+## Desktop integration work, October 12 continuation
+
+Added `scripts/prepare_desktop.py` and `Desktop/Overlay`. The generator creates an isolated checkout at the pinned revision, replaces the duplicated models/cleanup with BetterWisprShared, and adds the desktop journal adapter and Settings controls. Original upstream checkout is untouched. DesktopLibraryStore stages a replayable local transaction before applying workspace, meeting and baseline updates. Startup recovers before loading either model; normal stores refuse writes during pending recovery. Added five desktop tests, including an AppModel-to-mobile-journal round trip, and a shared rebase regression test. Apple CI now includes desktop build and full upstream tests. Source validation and three portable tests pass; new Apple jobs are pending at this checkpoint.

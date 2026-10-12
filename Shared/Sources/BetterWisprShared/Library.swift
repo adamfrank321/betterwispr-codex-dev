@@ -179,3 +179,14 @@ public struct LibraryJournal: Sendable {
         return try result.get()
     }
 }
+
+extension LibrarySnapshot {
+    /// Preserve edits made while remote I/O was in flight, including local deletions.
+    public static func rebasingChanges(from before: LibrarySnapshot, to current: LibrarySnapshot,
+                                       onto remote: LibrarySnapshot) -> LibrarySnapshot {
+        var result = remote.values
+        let old = before.values, new = current.values
+        for key in Set(old.keys).union(new.keys) where old[key] != new[key] { result[key] = new[key] }
+        return LibrarySnapshot(values: result)
+    }
+}
