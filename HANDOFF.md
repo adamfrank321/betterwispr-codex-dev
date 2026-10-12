@@ -1,52 +1,40 @@
 # Handoff
 
+Updated 2026-10-12. Repository: https://github.com/adamfrank321/betterwispr-codex-dev
+
 ## Goal and authorization
 
-Build an iOS variation of BetterWispr, sharing desktop functionality and synchronizing libraries. Adam authorized repo writes and asked for continuously updated TASKS.md and HANDOFF.md. On October 12 he stopped the previous agent and asked this thread to continue development rather than spend time diagnosing stalls.
+Build the native iOS BetterWispr companion with shared desktop models, cleanup and library synchronization. Adam authorized repository writes and continued development, and requested current task and handoff notes. Give brief progress updates and state clearly when work stops. Do not confuse compilation with device acceptance.
 
-## Recovered state
+## Current state
 
-Sol's source was at `/workspace/scratch/48ab2e3f8437/BetterWisprMobile`, with no local commits and nothing pushed. It contained shared domain/cleanup files, Library.swift, AppModel.swift, DictationRecorder.swift and CloudTranscriber.swift. No views, keyboard target, project configuration or tests existed. Its handoff incorrectly still said no repo existed after Adam supplied one.
+Source commit `8d91ded82bca18566595a456b3706c3412365a12`, tested through documentation commit `6a10f56f0ae29095732f2f4c0e3c84b77af2ac3a`. See docs/verification.md for the exact CI result.
 
-Current working root: `/workspace/scratch/0b1db2b1299d/BetterWisprMobile`.
-Upstream reference checkout: `/workspace/scratch/48ab2e3f8437/upstream`.
-Repository: https://github.com/adamfrank321/betterwispr-codex-dev . GitHub access verified with push permission. Initialized default main branch through the connector.
+- iOS SwiftUI app: on-device Apple Speech by default, explicit custom HTTPS API with Keychain credentials, 60-second clips, transcript editing, vocabulary and writing-mode editors, meeting notes/action items/export, usage and settings.
+- Keyboard extension inserts saved transcripts from the App Group. It does not record audio or use the network.
+- Shared package owns domain models, cleanup and immutable folder journal. Tombstones, deterministic conflicts, edits during sync, malformed data, cloud placeholders and missing previously seen events have regression coverage. Missing files pause sync rather than imply deletion.
+- Desktop integration is implemented in Desktop/Overlay and scripts/prepare_desktop.py. It generates an isolated pinned upstream checkout using the shared package. Settings has folder connection and sync controls; idle polling runs every 30 seconds. Device settings stay local.
+- Desktop commits workspace, meetings and sync baseline through a replayable pending transaction. Startup recovery precedes model loading; ordinary writes are blocked while recovery is pending. Corrupt files are preserved.
+- New editors retain unedited desktop fields and show archive-save failures. Desktop folder selection handles ordinary and security-scoped URLs.
 
-## Implemented in this takeover
+## Verification and next work
 
-Added SwiftUI entry point and screens, keyboard insertion, XcodeGen target/entitlement specification, seven shared Swift tests, provenance validation, two Python validator tests and macOS CI. Added a 90-second Speech timeout and reduced recording clips to 60 seconds. App foreground refresh triggers sync; entering the background stops active capture. No continuous background recording is claimed.
+Workflow [38298119747](https://github.com/adamfrank321/betterwispr-codex-dev/actions/runs/38298119747) passed both jobs at commit `6a10f56`: full desktop compilation, all 172 upstream/desktop tests (including five desktop integration tests), all 10 shared Swift tests, iOS app/keyboard simulator compilation, source provenance and three portable Python tests. The subsequent handoff update changes documentation only.
 
-## Verification
+Next is signed Mac/iPhone acceptance using docs/testing.md: permissions, interrupted recordings, on-device Speech assets, keyboard Full Access/App Group access, folder bookmark persistence and actual iCloud delivery. No physical-device behavior or signed release has been verified. Signing requires the user's Apple development team and a Mac/device environment; no signing assets are in this repository.
 
-Linux has no Swift compiler or Xcode. Source integrity check and two Python tests passed on October 12. At commit `1ce2d869dd61cfb73de08ebefc68f6ce74d9a25a`, all seven Swift tests, XcodeGen generation and the simulator app/keyboard build passed in GitHub Actions run https://github.com/adamfrank321/betterwispr-codex-dev/actions/runs/38295003866 . The follow-up makes audio-session deactivation best-effort after recording has safely stopped, so a deactivation error cannot strand its temporary file; its new CI run should also be checked. None of the microphone, recognition, iCloud folder or keyboard behavior has been device-tested. Do not equate source implementation with a working signed app.
+Later scope: iOS Whisper/Parakeet adapters, longer meetings, model-backed Medium cleanup/summaries, conflict-version recovery UI, safe journal compaction, app icon/accessibility review and TestFlight packaging. Do not present these as complete.
 
-## Resume, in order
+## Working instructions
 
-1. Inspect GitHub Actions for the latest main commit. The first full Apple build is green; keep that gate green as development continues.
-2. Finish desktop integration using the pinned upstream workspace persistence, not competing JSON file watchers. See docs/architecture.md and docs/desktop-integration.md for the inspected persistence entry points.
-3. Run the physical-device acceptance checklist in docs/testing.md. Improve capture interruption/failure recovery before long recordings.
-4. Complete editing controls for existing modes, vocabulary and meeting notes. Add conflict recovery before journal compaction.
+Current checkout: `/workspace/scratch/0b1db2b1299d/BetterWisprMobile`.
+Recovered original, untouched: `/workspace/scratch/48ab2e3f8437/BetterWisprMobile`.
+Clean pinned upstream: `/workspace/scratch/48ab2e3f8437/upstream`.
 
-## Preserved decisions
+The original agent's source had no commits or pushed implementation. This takeover added the application shell, UI, keyboard, project, tests, desktop integration and CI. GitHub main is the durable source; scratch paths may disappear.
 
-- Native SwiftUI app, Foundation shared package; upstream Apache-2.0 license retained.
-- Default speech recognition is explicitly on-device. Cloud upload requires selecting Custom API.
-- Sync history, vocabulary, modes, meetings and writing preferences through immutable event files. Never sync credentials, recordings or model assets.
-- Preserve raw transcripts and unreadable files. Retain tombstones and concurrent event versions.
-- Keyboard inserts saved text; microphone access is unavailable to keyboard extensions.
-- Desktop integration, Whisper/Parakeet for iOS, full meetings and Medium cleanup remain unfinished.
+Read AGENTS.md, TASKS.md and docs/testing.md. Run `python3 scripts/check_source.py` and `python3 -m unittest discover -s scripts/tests -v`. Linux has no Swift/Xcode; use Apple CI for native builds/tests. Generate desktop into a fresh output directory; never edit the disposable generated checkout. Existing generated scratch checkouts may be stale. Follow docs/desktop-integration.md on Mac.
 
-## Sources
+Upstream is pinned to `c10b57fd9525216045ab7e9e35d851bacca5cfe7`, under Apache-2.0. Ten extracted files are unchanged; WritingMode removes its desktop extension and CorrectionLearner exposes tokenize across modules. Hashes and adaptations are in upstream-lock.json. Do not silently move the pin.
 
-- https://github.com/opennookorg/betterwispr at c10b57fd9525216045ab7e9e35d851bacca5cfe7
-- https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/CustomKeyboard.html
-- https://developer.apple.com/documentation/uikit/configuring-open-access-for-a-custom-keyboard
-- https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md
-
-## Desktop integration work, October 12 continuation
-
-Added `scripts/prepare_desktop.py` and `Desktop/Overlay`. The generator creates an isolated checkout at the pinned revision, replaces the duplicated models/cleanup with BetterWisprShared, and adds the desktop journal adapter and Settings controls. Original upstream checkout is untouched. DesktopLibraryStore stages a replayable local transaction before applying workspace, meeting and baseline updates. Startup recovers before loading either model; normal stores refuse writes during pending recovery. Added five desktop tests, including an AppModel-to-mobile-journal round trip, and a shared rebase regression test. Apple CI now includes desktop build and full upstream tests. Source validation and three portable tests pass; new Apple jobs are pending at this checkpoint.
-
-Desktop CI run 38296642425 passed iOS/shared verification but the desktop build found CorrectionLearner.tokenize inaccessible across the new module boundary. The method is now public with the extraction adaptation recorded in upstream-lock.json; its algorithm is unchanged. Also added automatic idle desktop polling and journal guards for cloud placeholders and previously synchronized keys whose files are missing. New shared tests cover both incomplete-folder cases.
-
-At commit 29a7470, the iOS/shared job is green and the desktop application compiles successfully. Full desktop tests are still running in workflow 38297305846. The next source update adds iOS vocabulary/mode/meeting-note editors and save-error feedback, plus desktop folder handling for both security-scoped and ordinary user-selected URLs. Those changes still need their own Apple build.
+Keep on-device recognition the default, require explicit cloud selection, preserve raw transcripts and unreadable files, and never sync audio, credentials or model assets. Sync text is plaintext in the chosen folder. Stock upstream releases lack this desktop adapter.

@@ -1,35 +1,30 @@
 # Task list
 
-Updated 2026-10-12. Source completion and runtime verification are separate.
+Updated 2026-10-12. See docs/verification.md for build evidence.
 
-- [x] Recover Sol's uncommitted work and preserve an independent checkout.
-- [x] Identify and pin upstream c10b57fd9525216045ab7e9e35d851bacca5cfe7.
-- [x] Initialize the user-provided adamfrank321/betterwispr-codex-dev repository.
-- [x] Extract shared Swift models and cleanup algorithms with provenance hashes.
-- [x] Implement immutable journal, tombstones and deterministic conflict resolution in source.
-- [x] Wire dictation, editor, vocabulary, modes, meeting clips, insights and settings screens.
-- [x] Wire explicit API provider with Keychain storage and redirect rejection.
-- [x] Add keyboard extension for saved transcript insertion.
-- [x] Add XcodeGen app/keyboard targets and Apple CI configuration.
-- [x] Add Swift regression tests for journal and pipeline behavior.
-- [x] Run source integrity check and two portable validator tests successfully.
-- [x] Verify seven Swift regression tests and simulator app/keyboard compilation on macOS CI, run 38295003866.
-- [ ] Integrate the same shared package and journal with pinned upstream desktop persistence.
-- [ ] Test two-device sync, microphone interruption, bookmarks, keyboard and API on physical devices.
-- [ ] Finish robust recovery for failed recordings and sync conflicts.
-- [x] Add editors for existing vocabulary, modes, meeting notes and action-item completion; simulator compilation pending in this update.
+## Implemented and verified
+
+- [x] Recover prior work, preserve original and publish to the authorized repository.
+- [x] Pin upstream and extract shared models/cleanup with Apache-2.0 provenance.
+- [x] Implement immutable journal, tombstones, deterministic conflicts and local-edit rebasing.
+- [x] Preserve malformed files and pause for incomplete cloud folders.
+- [x] Add dictation, history, vocabulary/mode editing, meeting notes/action items/export and settings.
+- [x] Add explicit API provider with device-local Keychain storage and redirect rejection.
+- [x] Add keyboard insertion and XcodeGen app/keyboard targets.
+- [x] Integrate desktop shared package, folder controls, idle polling and replayable persistence.
+- [x] Add desktop/mobile journal round-trip and recovery regression coverage.
+- [x] Pass source checks, three Python tests, ten shared Swift tests and iOS simulator compilation.
+- [x] Pass latest desktop build and all 172 upstream/desktop tests in workflow 38298119747.
+
+## Device and release gates
+
+- [ ] Signed iPhone and Mac acceptance: sync, microphone interruptions, bookmarks, keyboard and API.
+- [ ] Assess failed-recording recovery using device results.
 - [ ] Signing, app icon, accessibility review, TestFlight and release packaging.
 
-Release follow-up
+## Later capabilities
 
 - [ ] iOS Whisper/Parakeet adapters, model downloads and memory testing.
 - [ ] Longer meeting capture with supported on-device engines.
-- [ ] Medium cleanup and meeting summaries with a selected notes model.
-- [ ] Export/recover concurrent journal versions and safe journal compaction.
-
-Desktop continuation
-
-- [x] Add pinned, reproducible desktop integration generator and shared-package extraction.
-- [x] Implement desktop folder controls, journal exchange and recoverable multi-file commit.
-- [x] Add desktop round-trip/recovery tests and Apple CI job.
-- [ ] Compile desktop app and pass full upstream plus desktop sync tests on Apple CI.
+- [ ] Model-backed Medium cleanup and meeting summaries.
+- [ ] UI to export/recover concurrent journal versions and safe journal compaction.
