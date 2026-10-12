@@ -80,6 +80,7 @@ def transform(tree, final_output):
     var librarySyncing = false
     var librarySyncStatus = "Sync off"
     var libraryFolder: URL?
+    @ObservationIgnored var libraryFolderScoped = false
     @ObservationIgnored var librarySyncState = DesktopSyncState()
     @ObservationIgnored let libraryExchange = DesktopLibraryExchange()
     @ObservationIgnored var libraryPoll: Task<Void, Never>?''')

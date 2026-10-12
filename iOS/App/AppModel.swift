@@ -86,13 +86,17 @@ final class AppModel {
         await synchronize()
     }
 
-    func persist() async {
-        guard readable else { message = "The unreadable library was preserved. Restore a backup before editing."; return }
+    @discardableResult
+    func persist() async -> Bool {
+        guard readable else { message = "The unreadable library was preserved. Restore a backup before editing."; return false }
         mutation += 1
         archive.library = library; archive.settings = settings
         let saved = archive
-        do { try await store.save(saved); try publishKeyboard() }
-        catch { message = "Could not save: \(error.localizedDescription)" }
+        do { try await store.save(saved) }
+        catch { message = "Could not save: \(error.localizedDescription)"; return false }
+        do { try publishKeyboard() }
+        catch { message = "Saved, but the keyboard could not be updated: \(error.localizedDescription)" }
+        return true
     }
 
     func connect(_ folder: URL) async {
@@ -128,7 +132,7 @@ final class AppModel {
                 // UI edits made during I/O are carried forward against the returned baseline.
                 library = LibrarySnapshot.rebasingChanges(from: local, to: library, onto: merged)
                 archive.baseline = merged
-                await persist()
+                guard await persist() else { syncStatus = "Sync needs attention"; return }
                 syncStatus = revision == mutation - 1 ? "Updated just now" : "Changes pending"
             } catch { syncStatus = "Sync needs attention"; message = error.localizedDescription }
         }

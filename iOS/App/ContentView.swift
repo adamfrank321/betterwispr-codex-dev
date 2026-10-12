@@ -105,9 +105,7 @@ struct ContentView: View {
                 if model.library.meetings.isEmpty { Text("Meeting clips appear here.").foregroundStyle(.secondary) }
                 ForEach(model.library.meetings) { meeting in
                     NavigationLink(meeting.displayTitle) {
-                        ScrollView { Text(meeting.markdown).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading).padding() }
-                            .navigationTitle(meeting.displayTitle)
-                            .toolbar { ShareLink(item: meeting.markdown) }
+                        MeetingEditor(model: model, meeting: meeting)
                     }
                 }.onDelete { indices in
                     model.library.meetings.remove(atOffsets: indices)
@@ -154,7 +152,11 @@ private struct VocabularyView: View {
             }
             Section("Saved vocabulary") {
                 ForEach(model.library.vocabulary) { entry in
-                    VStack(alignment: .leading) { Text(entry.phrase); Text(entry.replacement).foregroundStyle(.secondary) }
+                    NavigationLink {
+                        VocabularyEditor(model: model, entry: entry)
+                    } label: {
+                        VStack(alignment: .leading) { Text(entry.phrase); Text(entry.replacement).foregroundStyle(.secondary) }
+                    }
                 }.onDelete { offsets in
                     model.library.vocabulary.remove(atOffsets: offsets)
                     Task { await model.persist(); await model.synchronize() }
@@ -186,7 +188,11 @@ private struct ModesView: View {
             }
             Section("Saved modes") {
                 ForEach(model.library.modes) { mode in
-                    VStack(alignment: .leading) { Text(mode.name); Text(mode.triggerWords.joined(separator: ", ")).font(.caption).foregroundStyle(.secondary) }
+                    NavigationLink {
+                        WritingModeEditor(model: model, mode: mode)
+                    } label: {
+                        VStack(alignment: .leading) { Text(mode.name); Text(mode.triggerWords.joined(separator: ", ")).font(.caption).foregroundStyle(.secondary) }
+                    }
                 }.onDelete { offsets in
                     model.library.modes.remove(atOffsets: offsets)
                     Task { await model.persist(); await model.synchronize() }

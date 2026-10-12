@@ -5,6 +5,7 @@ public struct DesktopSyncState: Codable, Sendable {
     public var version = 1
     public var device = UUID()
     public var bookmark: Data?
+    public var securityScoped: Bool?
     public var baseline: LibrarySnapshot?
     public init() {}
 }

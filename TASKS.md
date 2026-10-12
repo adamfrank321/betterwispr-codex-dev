@@ -17,7 +17,7 @@ Updated 2026-10-12. Source completion and runtime verification are separate.
 - [ ] Integrate the same shared package and journal with pinned upstream desktop persistence.
 - [ ] Test two-device sync, microphone interruption, bookmarks, keyboard and API on physical devices.
 - [ ] Finish robust recovery for failed recordings and sync conflicts.
-- [ ] Support editing existing vocabulary/modes and meeting notes in the UI.
+- [x] Add editors for existing vocabulary, modes, meeting notes and action-item completion; simulator compilation pending in this update.
 - [ ] Signing, app icon, accessibility review, TestFlight and release packaging.
 
 Release follow-up

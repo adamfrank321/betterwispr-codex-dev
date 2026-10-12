@@ -10,4 +10,4 @@ Use one selected folder across devices. iOS keeps a security-scoped bookmark, co
 
 No API key, audio file, model weight, microphone setting or desktop shortcut belongs in a shared snapshot. Sync folders contain transcript text in plaintext. Audio clips use temporary files and are deleted after transcription, failure or cancellation. Failed clips are not currently retained for retry.
 
-Desktop bridge remains outstanding. It must import BetterWisprShared, migrate existing records without changing IDs, and integrate journal exchange with the desktop's serialized workspace persistence. A file watcher that competes with workspace writes is not an acceptable adapter. Keep the upstream revision pinned and verify adapter changes against real desktop tests.
+The desktop bridge imports BetterWisprShared and preserves existing record IDs. The generator integrates journal exchange with AppModel and MeetingModel and adds a replayable transaction across workspace, meetings and the saved sync baseline. See docs/desktop-integration.md and docs/desktop-design.md. The upstream revision stays pinned; CI builds the full patched desktop and runs its tests.

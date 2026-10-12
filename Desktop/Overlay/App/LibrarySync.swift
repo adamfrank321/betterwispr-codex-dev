@@ -20,10 +20,14 @@ extension AppModel {
             librarySyncState = try desktopLibraryStore.loadSync()
             guard let bookmark = librarySyncState.bookmark else { return }
             var stale = false
-            let url = try URL(resolvingBookmarkData: bookmark, options: [.withSecurityScope, .withoutUI],
+            let options: URL.BookmarkResolutionOptions = librarySyncState.securityScoped == false ? [.withoutUI] : [.withSecurityScope, .withoutUI]
+            let url = try URL(resolvingBookmarkData: bookmark, options: options,
                               relativeTo: nil, bookmarkDataIsStale: &stale)
-            guard !stale, url.startAccessingSecurityScopedResource() else { throw CocoaError(.fileReadNoPermission) }
-            libraryFolder = url
+            guard !stale else { throw CocoaError(.fileReadNoPermission) }
+            let scoped = url.startAccessingSecurityScopedResource()
+            do { _ = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil) }
+            catch { if scoped { url.stopAccessingSecurityScopedResource() }; throw error }
+            libraryFolder = url; libraryFolderScoped = scoped
             librarySyncStatus = "Connected"
         } catch { librarySyncStatus = "Reconnect folder"; statusMessage = error.localizedDescription }
     }
@@ -35,29 +39,33 @@ extension AppModel {
         panel.prompt = "Connect library"
         panel.message = "Choose the same shared folder as BetterWispr on your iPhone."
         guard panel.runModal() == .OK, let folder = panel.url else { return }
-        guard folder.startAccessingSecurityScopedResource() else {
-            librarySyncStatus = "Could not access folder"; return
-        }
+        let scoped = folder.startAccessingSecurityScopedResource()
         do {
+            _ = try FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)
             var state = try desktopLibraryStore.loadSync()
-            state.bookmark = try folder.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
-            state.baseline = nil
+            state.bookmark = try folder.bookmarkData(options: scoped ? .withSecurityScope : .minimalBookmark, includingResourceValuesForKeys: nil, relativeTo: nil)
+            state.baseline = nil; state.securityScoped = scoped
             try desktopLibraryStore.saveSync(state)
-            libraryFolder?.stopAccessingSecurityScopedResource()
-            libraryFolder = folder; librarySyncState = state
+            releaseLibraryFolder()
+            libraryFolder = folder; libraryFolderScoped = scoped; librarySyncState = state
             Task { await synchronizeLibrary() }
-        } catch { folder.stopAccessingSecurityScopedResource(); librarySyncStatus = error.localizedDescription }
+        } catch { if scoped { folder.stopAccessingSecurityScopedResource() }; librarySyncStatus = error.localizedDescription }
     }
 
     func disconnectLibrary() {
         guard !librarySyncing else { return }
         do {
             var state = try desktopLibraryStore.loadSync()
-            state.bookmark = nil; state.baseline = nil
+            state.bookmark = nil; state.baseline = nil; state.securityScoped = nil
             try desktopLibraryStore.saveSync(state)
-            libraryFolder?.stopAccessingSecurityScopedResource()
+            releaseLibraryFolder()
             libraryFolder = nil; librarySyncState = state; librarySyncStatus = "Sync off"
         } catch { librarySyncStatus = error.localizedDescription }
+    }
+
+    private func releaseLibraryFolder() {
+        if libraryFolderScoped { libraryFolder?.stopAccessingSecurityScopedResource() }
+        libraryFolderScoped = false
     }
 
     private func currentWorkspace() -> SavedState {

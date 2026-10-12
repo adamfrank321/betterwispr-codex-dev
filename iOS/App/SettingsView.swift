@@ -41,7 +41,7 @@ struct SettingsView: View {
                     Button("Sync now") { Task { await model.synchronize() } }
                     Button("Disconnect", role: .destructive) { Task { await model.disconnect() } }
                 }
-                Text("Choose the same folder on each supported device. Transcripts, vocabulary, modes and meeting notes sync. API keys and audio stay out of the sync folder. Desktop integration is still in development.").font(.caption).foregroundStyle(.secondary)
+                Text("Choose the same folder on each supported device. Transcripts, vocabulary, modes and meeting notes sync. API keys and audio stay out of the sync folder. Use the patched desktop build from this project to sync with your Mac.").font(.caption).foregroundStyle(.secondary)
             }
             Section("Keyboard") {
                 Text("Add BetterWispr in Settings → General → Keyboard → Keyboards. Enable Full Access to read your shared transcript list. Record in this app, then switch keyboards to insert a saved transcript. The keyboard makes no network requests.")

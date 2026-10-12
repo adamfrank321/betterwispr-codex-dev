@@ -8,11 +8,11 @@ Early development build. Native compilation and physical-device verification are
 
 - On-device Apple speech recognition by default; explicitly selected HTTPS transcription API with device-local Keychain credentials.
 - Record clips up to 60 seconds; edit saved transcripts while preserving raw recognition; learn vocabulary corrections.
-- History, vocabulary, writing modes, meeting clip export and usage totals.
+- History, vocabulary and writing-mode editors, meeting notes and action items, meeting export and usage totals.
 - Folder-based event journal for history, vocabulary, modes, meetings and preferences. Credentials, recordings and model files are excluded.
 - Keyboard extension inserts recent saved transcripts. Record in the main app, then return to the destination app and select the keyboard. Full Access is required for the shared container; the keyboard does not access the network.
 
-Desktop synchronization requires the desktop adapter, which is not implemented yet. Do not point this journal at upstream workspace JSON files. Whisper/Parakeet on iOS, long meeting capture and Medium cleanup are follow-up work.
+Desktop synchronization is included through a reproducible patch against the pinned upstream app. Build and connect it using [docs/desktop-integration.md](docs/desktop-integration.md). The stock upstream app does not include this adapter. Do not point the journal at upstream workspace JSON files. Whisper/Parakeet on iOS, long meeting capture and Medium cleanup are follow-up work.
 
 ## Build
 
